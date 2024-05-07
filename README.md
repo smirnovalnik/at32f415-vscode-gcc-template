@@ -15,7 +15,7 @@ Template is tested on AT32F415-START.
 Clone repository with submodules:
 
 ```bash
-git clone --recursive
+git clone --recursive https://github.com/smirnovalnik/at32f415-vscode-gcc-template.git
 ```
 
 ### Requirements
