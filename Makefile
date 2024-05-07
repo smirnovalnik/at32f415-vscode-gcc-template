@@ -1,4 +1,4 @@
-TARGET ?= target
+TARGET ?= target_name
 
 # Test
 TEST ?= 0
@@ -76,6 +76,7 @@ AS_DEFS =
 
 C_DEFS =  \
 -D$(DEVICE)\
+-DTARGET=\"$(TARGET)\" \
 -DVERSION=\"$(VERSION)\" \
 -DVERSION_MAJOR=$(VERSION_MAJOR) \
 -DVERSION_MINOR=$(VERSION_MINOR) \

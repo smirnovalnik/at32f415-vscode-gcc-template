@@ -27,7 +27,7 @@ int main(void)
     ULOG_INFO(TAG, "");
     ULOG_INFO(TAG, "----------------------------------------------");
     ULOG_INFO(TAG, "Copyright FDC (C) 2024");
-    ULOG_INFO(TAG, "TODO: Board name");
+    ULOG_INFO(TAG, "target: %s", TARGET);
     ULOG_INFO(TAG, "fw version: %s", VERSION);
     ULOG_INFO(TAG, "hw revision: %s", HW_REVISION);
     ULOG_INFO(TAG, "git commit hash: %s", GIT_HASH);
