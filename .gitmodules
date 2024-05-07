@@ -1,0 +1,9 @@
+[submodule "libs/unity"]
+	path = libs/unity
+	url = https://github.com/ThrowTheSwitch/Unity.git
+[submodule "libs/at32f415"]
+	path = libs/at32f415
+	url = https://github.com/ArteryTek/AT32F415_Firmware_Library.git
+[submodule "libs/ulog"]
+	path = libs/ulog
+	url = https://github.com/smirnovalnik/ulog.git
