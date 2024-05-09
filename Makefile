@@ -111,7 +111,7 @@ endif
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 # LDFLAGS
-LDSCRIPT = libs/at32f415/libraries/cmsis/cm4/device_support/startup/gcc/linker/AT32f415x8_FLASH.ld
+LDSCRIPT = port/AT32f415x8_FLASH.ld
 
 LIBDIR =
 LIBS = -lc -lm -lnosys
