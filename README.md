@@ -22,7 +22,7 @@ git clone --recursive https://github.com/smirnovalnik/at32f415-vscode-gcc-templa
 
 * `make`
 * `arm-none-eabi-gcc` toolchain >= 13.2
-* `openocd` port for atlink
+* `openocd` port for [atlink](https://github.com/ArteryTek/openocd)
 
 ### Build release firmware
 

@@ -1,0 +1,37 @@
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#1f0d2c",
+    "titleBar.activeForeground": "#cb9dff"
+  },
+  "files.readonlyInclude": { "libs/**": true },
+  "files.associations": {
+    "*.c": "c",
+    "*.h": "c",
+    "*.ld": "linkerscript",
+    "*.md": "markdown",
+    "*.s": "asm",
+    "*.S": "asm",
+    "*.jinja": "html",
+    "optional": "c",
+    "system_error": "c",
+    "array": "c",
+    "functional": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "utility": "c"
+  },
+  "cSpell.words": [
+
+  ],
+  "cortex-debug.variableUseNaturalFormat": false,
+  "cortex-debug.liveWatchRefreshRate": 500,
+  "c-cpp-flylint.excludeFromWorkspacePaths": [
+
+    "${workspaceRoot}/libs/**",
+    "${workspaceRoot}/libs/at32f415/libraries/drivers/src/*"
+  ],
+  "c-cpp-flylint.language": "c",
+  "c-cpp-flylint.flexelint.enable": false,
+  "c-cpp-flylint.flawfinder.enable": false,
+  "c-cpp-flylint.lizard.enable": false
+}

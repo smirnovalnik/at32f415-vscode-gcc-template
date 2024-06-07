@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/out/target.elf",
+      "name": "at32f415-jlink-debug",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "jlink",
+      "serverArgs": ["-speed", "10000"],
+      "debuggerArgs": ["-d", "${workspaceFolder}"],
+      "svdFile": "./port/AT32f415xx_v2.svd",
+      "device": "AT32f415C8T7",
+      "interface": "swd",
+      "rtos": "auto",
+      "runToEntryPoint": "main",
+      "preLaunchTask": "BuildDebug"
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/out/target.elf",
+      "name": "at32f415-atlink-debug",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": ["interface/atlink_dap_v2.cfg", "target/at32f415xx.cfg"],
+      "svdFile": "${workspaceRoot}/port/AT32f415xx_v2.svd",
+      "device": "AT32f415C8T7",
+      "runToEntryPoint": "main",
+      "rtos": "auto",
+      "interface": "swd",
+      "preLaunchTask": "BuildDebug"
+    }
+  ]
+}
