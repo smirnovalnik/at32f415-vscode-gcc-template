@@ -2,7 +2,7 @@
 
 ## Description
 
-
+This is a template project for AT32F415 MCU.
 
 ## Hardware
 
