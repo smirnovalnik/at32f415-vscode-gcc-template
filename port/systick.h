@@ -20,4 +20,4 @@ void systick_delay_sec(uint32_t sec);
 
 void systick_delay_ms(uint32_t ms);
 
-void systick_interrupt(void);
+void systick_interrupt_handler(void);
