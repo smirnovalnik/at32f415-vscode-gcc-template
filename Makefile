@@ -114,7 +114,7 @@ LDSCRIPT = port/AT32f415x8_FLASH.ld
 
 LIBDIR =
 LIBS = -lc -lm -lnosys
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(IMAGE_NAME).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(IMAGE_NAME).map,--cref -Wl,--gc-sections -Wl,--no-warn-rwx-segments
 
 all: $(BUILD_DIR)/$(IMAGE_NAME).elf $(BUILD_DIR)/$(IMAGE_NAME).hex $(BUILD_DIR)/$(IMAGE_NAME).bin
 
@@ -172,7 +172,7 @@ flash-atlink:
 flash-jlink:
 	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
-test:
+test: clean
 	gcc -Ilibs/unity/src -Isrc -o $(BUILD_DIR)/$(IMAGE_NAME)_test tests/unit_test_example.c libs/unity/src/unity.c
 	$(BUILD_DIR)/$(IMAGE_NAME)_test
 
