@@ -54,6 +54,7 @@ int main(void)
         platform_wdg_feed();
 
         ULOG_INFO(TAG, "counter: %d", counter);
+        counter++;
 
         systick_delay_ms(500);
     }
