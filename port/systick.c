@@ -1,10 +1,10 @@
 /**
-  ******************************************************************************
-  * @file    systick.c
-  * @author  Alexander Smirnov
-  * @copyright Copyright FDC (C) 2024
-  ******************************************************************************
-*/
+ ******************************************************************************
+ * @file    systick.c
+ * @author  Alexander Smirnov
+ * @copyright Copyright FDC (C) 2024
+ ******************************************************************************
+ */
 
 #include "systick.h"
 #include "at32f415.h"
@@ -17,9 +17,7 @@ void systick_init(void)
 
     SysTick->LOAD = (uint32_t)((system_core_clock / 1000UL) - 1UL);
     SysTick->VAL = 0UL;
-    SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk |
-                     SysTick_CTRL_TICKINT_Msk |
-                     SysTick_CTRL_ENABLE_Msk;
+    SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
 }
 
 uint32_t systick_get_tick_sec(void)
