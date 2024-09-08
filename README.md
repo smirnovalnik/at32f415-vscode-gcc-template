@@ -30,7 +30,7 @@ git clone --recursive https://github.com/smirnovalnik/at32f415-vscode-gcc-templa
 Run in root directory:
 
 ```bash
-make clean && make
+make clean && make -j
 ```
 
 ### Build debug firmware
@@ -38,7 +38,7 @@ make clean && make
 Run in root directory:
 
 ```bash
-make clean && DEBUG=1 make
+make clean && make DEBUG=1 -j
 ```
 
 ### Build test firmware
@@ -46,7 +46,7 @@ make clean && DEBUG=1 make
 Run in root directory:
 
 ```bash
-make clean && TEST=1 make
+make clean && make TEST=1 -j
 ```
 
 ### Build and run unit tests
