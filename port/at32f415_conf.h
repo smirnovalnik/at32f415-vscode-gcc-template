@@ -59,24 +59,24 @@ extern "C" {
 /* module define -------------------------------------------------------------*/
 #define CRM_MODULE_ENABLED
 #define CMP_MODULE_ENABLED
-//#define TMR_MODULE_ENABLED
-//#define ERTC_MODULE_ENABLED
+#define TMR_MODULE_ENABLED
+#define ERTC_MODULE_ENABLED
 #define GPIO_MODULE_ENABLED
-//#define I2C_MODULE_ENABLED
+#define I2C_MODULE_ENABLED
 #define USART_MODULE_ENABLED
-//#define PWC_MODULE_ENABLED
-//#define CAN_MODULE_ENABLED
-//#define ADC_MODULE_ENABLED
-//#define SPI_MODULE_ENABLED
-//#define DMA_MODULE_ENABLED
-//#define DEBUG_MODULE_ENABLED
+#define PWC_MODULE_ENABLED
+#define CAN_MODULE_ENABLED
+#define ADC_MODULE_ENABLED
+#define SPI_MODULE_ENABLED
+#define DMA_MODULE_ENABLED
+#define DEBUG_MODULE_ENABLED
 #define FLASH_MODULE_ENABLED
-//#define CRC_MODULE_ENABLED
-//#define WWDT_MODULE_ENABLED
+#define CRC_MODULE_ENABLED
+#define WWDT_MODULE_ENABLED
 #define WDT_MODULE_ENABLED
-//#define EXINT_MODULE_ENABLED
-//#define SDIO_MODULE_ENABLED
-//#define USB_MODULE_ENABLED
+#define EXINT_MODULE_ENABLED
+#define SDIO_MODULE_ENABLED
+#define USB_MODULE_ENABLED
 #define MISC_MODULE_ENABLED
 
 /* includes ------------------------------------------------------------------*/

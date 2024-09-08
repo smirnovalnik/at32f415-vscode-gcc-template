@@ -30,20 +30,20 @@ DEBUG ?= 0
 OPT = -O3
 
 # Sources
-C_SOURCES = \
-src/main.c \
-port/platform.c \
-port/systick.c \
-port/at32f415_int.c \
-port/at32f415_clock.c \
-port/syscalls.c \
+PROJ_C_SOURCES = \
+$(wildcard src/*.c) \
+$(wildcard port/*.c) \
+
+LIB_C_SOURCES = \
 libs/at32f415/libraries/cmsis/cm4/device_support/system_at32f415.c \
-libs/at32f415/libraries/drivers/src/at32f415_crm.c \
-libs/at32f415/libraries/drivers/src/at32f415_gpio.c \
-libs/at32f415/libraries/drivers/src/at32f415_usart.c \
-libs/at32f415/libraries/drivers/src/at32f415_wdt.c \
-libs/at32f415/libraries/drivers/src/at32f415_misc.c \
+$(wildcard libs/at32f415/libraries/drivers/src/*.c) \
+libs/at32f415/middlewares/freertos/source/portable/GCC/ARM_CM3/port.c \
+$(wildcard libs/at32f415/middlewares/freertos/source/*.c) \
+libs/at32f415/middlewares/freertos/source/portable/memmang/heap_4.c \
 libs/ulog/src/ulog.c \
+$(wildcard libs/littlefs/*.c) \
+
+C_SOURCES = $(PROJ_C_SOURCES) $(LIB_C_SOURCES)
 
 # Asm
 ASM_SOURCES = \
@@ -96,8 +96,10 @@ C_INCLUDES =  \
 -Ilibs/at32f415/libraries/cmsis/cm4/device_support \
 -Ilibs/at32f415/libraries/cmsis/cm4/core_support \
 -Ilibs/at32f415/libraries/drivers/inc \
--Ilibs/at32f415/middlewares/i2c_application_library \
+-Ilibs/at32f415/middlewares/freertos/source/include \
+-Ilibs/at32f415/middlewares/freertos/source/portable/GCC/ARM_CM3 \
 -Ilibs/ulog/src \
+-Ilibs/littlefs \
 
 # Result gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -176,6 +178,12 @@ test: clean
 	gcc -Ilibs/unity/src -Isrc -o $(BUILD_DIR)/$(IMAGE_NAME)_test tests/unit_test_example.c libs/unity/src/unity.c
 	$(BUILD_DIR)/$(IMAGE_NAME)_test
 
+format-check:
+	@clang-format --dry-run --Werror $(PROJ_C_SOURCES)
+
+format:
+	@clang-format -i $(PROJ_C_SOURCES)
+
 -include $(wildcard $(BUILD_DIR)/*.d)
 
-.PHONY: build clean flash-atlink flash-jlink test out dist tmp
+.PHONY: build clean flash-atlink flash-jlink test out dist tmp format-check format

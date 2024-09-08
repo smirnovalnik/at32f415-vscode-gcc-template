@@ -1,4 +1,3 @@
-
 /**
  ************************************************************************************************
  * @file    syscalls.c
@@ -10,71 +9,82 @@
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/times.h>
 
-#include "at32f415.h"
 #include "hal.h"
+#include "platform.h"
 #include "systick.h"
 
 int __io_putchar(int ch)
 {
-    while (usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);
-    usart_data_transmit(USART1, (uint16_t)ch);
-    while (usart_flag_get(USART1, USART_TDC_FLAG) == RESET);
-    return ch;
+    return platform_fputc(ch);
 }
 
-int _write(int fd, char *pbuffer, int size)
+int _open(const char* name, int flags, int mode)
 {
-    for(int i = 0; i < size; i ++)
+    return -1;
+}
+
+int _write(int fd, char* pbuffer, int size)
+{
+    for (int i = 0; i < size; i++)
     {
-        while( usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);
-        usart_data_transmit(USART1, (uint16_t)(*pbuffer++));
-        while (usart_flag_get(USART1, USART_TDC_FLAG) == RESET);
+        platform_fputc((uint16_t)(*pbuffer++));
     }
 
     return size;
 }
 
-clock_t _times(struct tms * tp)
+int _read(int file, char* ptr, int len)
+{
+    return 0;
+}
+
+int _close(int file)
+{
+    return -1;
+}
+
+int _fstat(int file, struct stat* st)
+{
+    st->st_mode = S_IFCHR;
+    return 0;
+}
+
+int _lseek(int file, int ptr, int dir)
+{
+    return 0;
+}
+
+clock_t _times(struct tms* tp)
 {
     clock_t timeval;
 
-    timeval = systick_get_tick_ms();	// TODO
+    timeval = systick_get_tick_ms();
 
     if (tp)
     {
-        tp->tms_utime  = timeval;	/* user time */
-        tp->tms_stime  = 0;	/* system time */
-        tp->tms_cutime = 0;	/* user time, children */
-        tp->tms_cstime = 0;	/* system time, children */
+        tp->tms_utime = timeval; /* user time */
+        tp->tms_stime = 0;       /* system time */
+        tp->tms_cutime = 0;      /* user time, children */
+        tp->tms_cstime = 0;      /* system time, children */
     }
 
     return timeval;
 };
 
-int _close_r(struct _reent *ptr, int fd)
+int _isatty(int file)
 {
-    return -1;
+    return 1;
 }
 
-int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat)
+int _getpid(void)
 {
-    return -1;
+    return 1;
 }
 
-off_t _lseek_r(struct _reent *ptr, int fd, off_t pos, int whence)
+int _kill(int pid, int sig)
 {
+    errno = EINVAL;
     return -1;
-}
-
-_ssize_t _read_r(struct _reent *ptr, int fd, void *buf, size_t cnt)
-{
-    return -1;
-}
-
-int _isatty_r(struct _reent *ptr, int fd)
-{
-  return 1;
 }

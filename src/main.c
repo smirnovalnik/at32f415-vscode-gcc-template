@@ -11,16 +11,36 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "FreeRTOS.h"
+#include "FreeRTOSConfig.h"
+#include "semphr.h"
+#include "task.h"
+
 #include "platform.h"
 #include "systick.h"
 #include "ulog.h"
 
 const char* TAG = "main";
 
+void system_task(void* pvParameters);
+
 int main(void)
 {
     platform_init();
+    platform_wdg_init();
 
+    xTaskCreate(system_task, "system_task", 512, NULL, 2, NULL);
+
+    vTaskStartScheduler();
+}
+
+void vApplicationIdleHook(void)
+{
+    platform_sleep();
+}
+
+void system_task(void* pvParameters)
+{
     ulog_init(ULOG_STDOUT);
     ulog_set_level(ULOG_DEBUG_LVL);
 
@@ -35,7 +55,7 @@ int main(void)
     ULOG_INFO(TAG, "build time: %s", __TIME__);
 
     uint32_t mcu_uid[3];
-    platform_get_uid(mcu_uid);
+    platform_get_mcu_uid(mcu_uid);
     ULOG_INFO(TAG, "mcu uid: %08X %08X %08X", mcu_uid[0], mcu_uid[1], mcu_uid[2]);
     ULOG_INFO(TAG, "flash size: %d KB", platform_get_flash_size_kb());
     ULOG_INFO(TAG, "system_core_clock: %d MHz", platform_get_system_clock_mhz());

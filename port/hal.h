@@ -8,12 +8,18 @@
 
 #pragma once
 
-#define USART1_CLK          CRM_USART1_PERIPH_CLOCK
+#include "at32f415.h"
 
-#define USART1_TX_PORT      GPIOA
-#define USART1_TX_PIN       GPIO_PINS_9
-#define USART1_TX_PORT_CLK  CRM_GPIOA_PERIPH_CLOCK
+// ISP/LOG
+#define LOG_UART                USART1
+#define LOG_UART_CLK            CRM_USART1_PERIPH_CLOCK
 
-#define USART1_RX_PORT      GPIOA
-#define USART1_RX_PIN       GPIO_PINS_10
-#define USART1_RX_PORT_CLK  CRM_GPIOA_PERIPH_CLOCK
+#define LOG_UART_TX_PORT        GPIOA
+#define LOG_UART_TX_PIN         GPIO_PINS_9
+#define LOG_UART_TX_PORT_CLK    CRM_GPIOA_PERIPH_CLOCK
+
+#define LOG_UART_RX_PORT        GPIOA
+#define LOG_UART_RX_PIN         GPIO_PINS_10
+#define LOG_UART_RX_PORT_CLK    CRM_GPIOA_PERIPH_CLOCK
+
+#define LOG_UART_BAUDRATE       250000

@@ -24,6 +24,8 @@
 
 /* includes ------------------------------------------------------------------*/
 #include "at32f415_int.h"
+#include "FreeRTOSConfig.h"
+#include "platform.h"
 #include "systick.h"
 
 /** @addtogroup AT32F415_periph_template
@@ -120,6 +122,7 @@ void DebugMon_Handler(void)
   */
 void PendSV_Handler(void)
 {
+  xPortPendSVHandler();
 }
 
 /**
@@ -130,6 +133,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   systick_interrupt_handler();
+  xPortSysTickHandler();
 }
 
 /**
