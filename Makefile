@@ -173,28 +173,34 @@ $(DIST_DIR):
 $(TMP_DIR):
 	@mkdir -p $@
 
+.PHONY: clean
 clean:
 	-rm -fR $(BUILD_DIR)
 	-rm -fR $(OUT_DIR)
 	-rm -fR $(DIST_DIR)
 	-rm -fR $(TMP_DIR)
 
+.PHONY: flash-atlink
 flash-atlink:
 	$(OPENOCD_PATH)/openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
+.PHONY: flash-jlink
 flash-jlink:
 	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
+.PHONY: test
 test: clean
 	gcc -Ilibs/unity/src -Isrc -o $(BUILD_DIR)/$(IMAGE_NAME)_test tests/unit_test_example.c libs/unity/src/unity.c
 	$(BUILD_DIR)/$(IMAGE_NAME)_test
 
+.PHONY: format-check
 format-check:
 	@clang-format --dry-run --Werror $(PROJ_C_SOURCES)
 
+.PHONY: format
 format:
 	@clang-format -i $(PROJ_C_SOURCES)
 
 -include $(wildcard $(BUILD_DIR)/*.d)
 
-.PHONY: build clean flash-atlink flash-jlink test out dist tmp format-check format
+.PHONY: build out dist tmp
