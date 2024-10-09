@@ -44,6 +44,7 @@
  */
 void NMI_Handler(void)
 {
+    clock_failure_detection_handler();
 }
 
 /**
@@ -105,6 +106,7 @@ void UsageFault_Handler(void)
  */
 void SVC_Handler(void)
 {
+    vPortSVCHandler();
 }
 
 /**
@@ -136,6 +138,17 @@ void SysTick_Handler(void)
     systick_interrupt_handler();
     ost_interrupt_handler();
     xPortSysTickHandler();
+}
+
+/**
+ * @brief  this function handles the power voltage monitoring output interrupt
+ * request.
+ * @param  none
+ * @retval none
+ */
+void PVM_IRQHandler(void)
+{
+    power_voltage_monitor_handler();
 }
 
 /**

@@ -71,6 +71,6 @@ void system_task(void* pvParameters)
         ULOG_INFO(TAG, "counter: %d", counter);
         counter++;
 
-        vTaskDelay(500/portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
