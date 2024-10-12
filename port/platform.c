@@ -408,7 +408,7 @@ int platform_fputc(int ch)
 {
     char item = (char)ch;
 
-    xQueueSendToBack(stdout_queue, &item, 10 / portTICK_RATE_MS);
+    xQueueSendToBack(stdout_queue, &item, pdMS_TO_TICKS(10));
 
     return ch;
 }
