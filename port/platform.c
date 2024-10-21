@@ -266,11 +266,11 @@ bool platform_is_flash_protection_enabled(void)
     return (flash_fap_status_get() == RESET) ? false : true;
 }
 
-#define LFS_SIZE 4096 // 4KB, see linker script
-#define LFS_CACHE_SIZE 256
+#define LFS_SIZE           4096 // 4KB, see linker script
+#define LFS_CACHE_SIZE     256
 #define LFS_LOOKAHEAD_SIZE 16
 
-#define BLOCK_SIZE 2048
+#define BLOCK_SIZE  2048
 #define BLOCK_COUNT (LFS_SIZE / BLOCK_SIZE)
 
 uint32_t platform_get_lfs_start(void)
@@ -300,7 +300,8 @@ static int flash_prog(const struct lfs_config* c, lfs_block_t block, lfs_off_t o
 
     for (uint32_t i = 0; i < size; i += 4)
     {
-        status = flash_word_program(platform_get_lfs_start() + block * BLOCK_SIZE + off + i, *((uint32_t*)(buffer + i)));
+        status
+            = flash_word_program(platform_get_lfs_start() + block * BLOCK_SIZE + off + i, *((uint32_t*)(buffer + i)));
         if (status != FLASH_OPERATE_DONE)
         {
             flash_lock();
@@ -392,7 +393,8 @@ static void stdio_task(void* pvParameters)
 
         if (xQueueReceive(stdout_queue, &ping_buf[*ping_len], portMAX_DELAY) == pdPASS)
         {
-            while ((++(*ping_len) < STDIO_PP_BUF_SIZE) && (xQueueReceive(stdout_queue, &ping_buf[*ping_len], 0) == pdPASS));
+            while ((++(*ping_len) < STDIO_PP_BUF_SIZE)
+                   && (xQueueReceive(stdout_queue, &ping_buf[*ping_len], 0) == pdPASS));
 
             *pong_len = 0;
             for (int i = 0; i < *ping_len; i++)

@@ -18,5 +18,9 @@ AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
 BreakBeforeBinaryOperators: All
 SpacesInConditionalStatement: false
-ColumnLimit: 160
+ColumnLimit: 120
 PointerAlignment: Left
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+IndentCaseLabels: true
+AlignConsecutiveMacros: true

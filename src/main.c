@@ -56,8 +56,8 @@ void system_task(void* pvParameters)
     ULOG_INFO(TAG, "system_core_clock: %d MHz", platform_get_system_clock_mhz());
     platform_rst_cause_t rst_cause = {0};
     platform_get_rst_cause(&rst_cause);
-    ULOG_INFO(TAG, "rst cause: power_on: %d, external: %d, software: %d, watchdog: %d, brown_out: %d", rst_cause.power_on, rst_cause.external,
-              rst_cause.software, rst_cause.watchdog, rst_cause.brown_out);
+    ULOG_INFO(TAG, "rst cause: power_on: %d, external: %d, software: %d, watchdog: %d, brown_out: %d",
+              rst_cause.power_on, rst_cause.external, rst_cause.software, rst_cause.watchdog, rst_cause.brown_out);
 
     ULOG_WARN(TAG, "start");
 
