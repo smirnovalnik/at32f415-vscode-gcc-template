@@ -3,3 +3,4 @@ out
 tmp
 dist
 .DS_Store
+.env

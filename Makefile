@@ -1,5 +1,7 @@
 TARGET ?= target_name
 
+-include .env
+
 # Test
 TEST ?= 0
 
@@ -64,7 +66,7 @@ endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
-OPENOCD_PATH ?= /Users/aleksandrsmirnov/Dropbox/Development/openocd/dist/usr/local/bin/
+OPENOCD_PATH ?=
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -147,19 +149,19 @@ $(BUILD_DIR)/$(IMAGE_NAME).elf: $(OBJECTS) Makefile
 	@cp $@ $(OUT_DIR)
 	@cp $@ $(OUT_DIR)/$(TARGET).elf
 	$(SZ) $(OUT_DIR)/$(IMAGE_NAME).elf
-	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).elf | awk '{print $$1}' >> $(OUT_DIR)/$(IMAGE_NAME).elf.sha256
+	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).elf | awk '{print $$1}' > $(OUT_DIR)/$(IMAGE_NAME).elf.sha256
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	@$(HEX) $< $@
 	@cp $@ $(OUT_DIR)
 	@cp $@ $(OUT_DIR)/$(TARGET).hex
-	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).hex | awk '{print $$1}' >> $(OUT_DIR)/$(IMAGE_NAME).hex.sha256
+	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).hex | awk '{print $$1}' > $(OUT_DIR)/$(IMAGE_NAME).hex.sha256
 
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	@$(BIN) $< $@
 	@cp $@ $(OUT_DIR)
 	@cp $@ $(OUT_DIR)/$(TARGET).bin
-	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).bin | awk '{print $$1}' >> $(OUT_DIR)/$(IMAGE_NAME).bin.sha256
+	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).bin | awk '{print $$1}' > $(OUT_DIR)/$(IMAGE_NAME).bin.sha256
 
 $(BUILD_DIR):
 	@mkdir -p $@
