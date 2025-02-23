@@ -4,7 +4,7 @@
     {
       "label": "BuildRelease",
       "type": "shell",
-      "command": "make -j",
+      "command": "make clean && make -j",
       "options": {
         "cwd": "${workspaceRoot}"
       },
@@ -14,9 +14,9 @@
       }
     },
     {
-      "label": "FlashATlink",
+      "label": "Flash",
       "type": "shell",
-      "command": "make flash-atlink",
+      "command": "make flash-openocd-atlink",
       "options": {
         "cwd": "${workspaceRoot}"
       },
@@ -30,23 +30,10 @@
     {
       "label": "BuildDebug",
       "type": "shell",
-      "command": "make -j DEBUG=1",
+      "command": "make clean && make -j DEBUG=1",
       "options": {
         "cwd": "${workspaceRoot}"
       },
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      }
-    },
-    {
-      "label": "ReBuild",
-      "type": "shell",
-      "options": {
-        "cwd": "${workspaceRoot}"
-      },
-      "dependsOrder": "sequence",
-      "dependsOn": ["Clean", "BuildRelease"],
       "group": {
         "kind": "build",
         "isDefault": false

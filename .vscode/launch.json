@@ -4,7 +4,7 @@
     {
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceRoot}/out/target.elf",
-      "name": "at32f415-jlink-debug",
+      "name": "at32f415-openocd-jlink",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "jlink",
@@ -20,7 +20,7 @@
     {
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceRoot}/out/target.elf",
-      "name": "at32f415-atlink-debug",
+      "name": "at32f415-openocd-atlink",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",

@@ -67,13 +67,23 @@ HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
 OPENOCD_PATH ?=
+ATLINK_CONSOLE_PATH ?=
 
-UNAME_S = $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	SHA256SUM = sha256sum
-endif
-ifeq ($(UNAME_S),Darwin)
-	SHA256SUM = shasum -a 256
+ATLINK_CONSOLE = $(ATLINK_CONSOLE_PATH)ATLink_Console
+
+RM = rm -fR
+MKDIR = mkdir -p
+ifeq ($(OS),Windows_NT)
+    SHA256SUM = CertUtil -hashfile
+	ATLINK_CONSOLE = $(ATLINK_CONSOLE_PATH)ATLink_Console.exe
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        SHA256SUM = sha256sum
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        SHA256SUM = shasum -a 256
+    endif
 endif
 
 # Flags
@@ -182,13 +192,29 @@ clean:
 	-rm -fR $(DIST_DIR)
 	-rm -fR $(TMP_DIR)
 
-.PHONY: flash-atlink
-flash-atlink:
+.PHONY: flash-openocd-atlink
+flash-openocd-atlink:
 	$(OPENOCD_PATH)/openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
-.PHONY: flash-jlink
-flash-jlink:
+.PHONY: reset-openocd-atlink
+reset-openocd-atlink:
+	$(OPENOCD_PATH)openocd -f interface/atlink_dap_v2.cfg -f target/at32f435xx.cfg -c "init; reset; exit"
+
+.PHONY: flash-openocd-jlink
+flash-openocd-jlink:
 	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
+
+.PHONY: reset-openocd-jlink
+reset-openocd-jlink:
+	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "init; reset; exit"
+
+.PHONY: flash-atlink-console
+flash-atlink-console:
+	$(ATLINK_CONSOLE) -device $(DEVICE) -connect -p --dfap --depp -d --fn $(OUT_DIR)/$(TARGET).hex --v
+
+.PHONY: reset-atlink-console
+reset-atlink-console:
+	$(ATLINK_CONSOLE) -device $(DEVICE) -connect -r
 
 .PHONY: test
 test: clean
