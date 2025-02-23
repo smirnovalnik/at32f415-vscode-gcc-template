@@ -158,7 +158,7 @@ $(BUILD_DIR)/$(IMAGE_NAME).elf: $(OBJECTS) Makefile
 	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	@cp $@ $(OUT_DIR)
 	@cp $@ $(OUT_DIR)/$(TARGET).elf
-	$(SZ) $(OUT_DIR)/$(IMAGE_NAME).elf
+	@$(SZ) $(OUT_DIR)/$(IMAGE_NAME).elf
 	@$(SHA256SUM) $(OUT_DIR)/$(IMAGE_NAME).elf | awk '{print $$1}' > $(OUT_DIR)/$(IMAGE_NAME).elf.sha256
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
