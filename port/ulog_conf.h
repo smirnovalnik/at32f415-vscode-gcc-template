@@ -19,6 +19,7 @@
 
 #define ULOG_ENDLINE            "\n"  // End of line
 #define ULOG_REMOVE_SPACES      0     // Remove spaces (> 2 in row) from the message
+#define ULOG_MESSAGE_LEN        120   // Length of the message
 
 #define ULOG_FILE_SYSTEM        0     // Enable log to file system
 #define ULOG_FILE_NAME          "system.log"        // File name

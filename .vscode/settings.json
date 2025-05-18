@@ -25,6 +25,7 @@
   ],
   "cortex-debug.variableUseNaturalFormat": false,
   "cortex-debug.liveWatchRefreshRate": 500,
+  "cortex-debug.openocdPath.osx": "/Users/aleksandrsmirnov/Dropbox/Development/openocd/dist/usr/local/bin/openocd",
   "c-cpp-flylint.excludeFromWorkspacePaths": [
 
     "${workspaceRoot}/libs/**",
