@@ -394,14 +394,12 @@ static void stdio_task(void* pvParameters)
         if (xQueueReceive(stdout_queue, &ping_buf[*ping_len], portMAX_DELAY) == pdPASS)
         {
             while ((++(*ping_len) < STDIO_PP_BUF_SIZE)
-                   && (xQueueReceive(stdout_queue, &ping_buf[*ping_len], 0) == pdPASS))
-                ;
+                   && (xQueueReceive(stdout_queue, &ping_buf[*ping_len], 0) == pdPASS));
 
             *pong_len = 0;
             for (int i = 0; i < *ping_len; i++)
             {
-                while (usart_flag_get(LOG_UART, USART_TDBE_FLAG) == RESET)
-                    ;
+                while (usart_flag_get(LOG_UART, USART_TDBE_FLAG) == RESET);
                 usart_data_transmit(LOG_UART, (uint16_t)(*ping_buf++));
             }
         }

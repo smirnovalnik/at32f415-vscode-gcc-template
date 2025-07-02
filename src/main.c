@@ -22,7 +22,6 @@ void system_task(void* pvParameters);
 int main(void)
 {
     platform_init();
-    platform_wdg_init();
 
     xTaskCreate(system_task, "system_task", 512, NULL, 2, NULL);
 

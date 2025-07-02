@@ -35,8 +35,7 @@ void systick_delay_sec(uint32_t sec)
     uint32_t start = 0;
 
     start = systick_get_tick_sec();
-    while ((systick_get_tick_sec() - start) < sec)
-        ;
+    while ((systick_get_tick_sec() - start) < sec);
 }
 
 void systick_delay_ms(uint32_t ms)
@@ -44,8 +43,7 @@ void systick_delay_ms(uint32_t ms)
     uint32_t start = 0;
 
     start = systick_get_tick_ms();
-    while ((systick_get_tick_ms() - start) < ms)
-        ;
+    while ((systick_get_tick_ms() - start) < ms);
 }
 
 void systick_interrupt_handler(void)

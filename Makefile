@@ -132,7 +132,7 @@ endif
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 # LDFLAGS
-LDSCRIPT = port/AT32f415x8_FLASH.ld
+LDSCRIPT = port/AT32F415x8_FLASH.ld
 
 LIBDIR =
 LIBS = -lc -lm -lnosys
