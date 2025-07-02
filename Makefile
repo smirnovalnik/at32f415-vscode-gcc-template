@@ -229,6 +229,18 @@ format-check:
 format:
 	@clang-format -i $(PROJ_C_SOURCES)
 
+.PHONY: docker-build
+docker-build:
+	@docker build --platform linux/amd64 -t at32-builder .
+
+.PHONY: docker-run
+docker-run:
+	@docker run --rm -it -v $(shell pwd):/project at32-builder
+
+.PHONY: docker-clean
+docker-clean:
+	@docker rmi at32-builder
+
 -include $(wildcard $(BUILD_DIR)/*.d)
 
 .PHONY: build out dist tmp
