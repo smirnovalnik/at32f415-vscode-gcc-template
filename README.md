@@ -20,7 +20,7 @@ git clone --recursive https://github.com/smirnovalnik/at32f415-vscode-gcc-templa
 
 ### Requirements
 
-* `make`
+* `make` >= 3.8
 * `arm-none-eabi-gcc` toolchain >= 13.2 from [here](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 * `openocd` port for [atlink](https://github.com/ArteryTek/openocd)
 * `vscode` with `Cortex-Debug` extension

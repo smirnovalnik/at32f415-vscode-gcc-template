@@ -66,9 +66,6 @@ endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
-OPENOCD_PATH ?=
-ATLINK_CONSOLE_PATH ?=
-
 ATLINK_CONSOLE = $(ATLINK_CONSOLE_PATH)ATLink_Console
 
 RM = rm -fR
@@ -194,7 +191,7 @@ clean:
 
 .PHONY: flash-openocd-atlink
 flash-openocd-atlink:
-	$(OPENOCD_PATH)/openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
+	$(OPENOCD_PATH)openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
 .PHONY: reset-openocd-atlink
 reset-openocd-atlink:
@@ -202,11 +199,11 @@ reset-openocd-atlink:
 
 .PHONY: flash-openocd-jlink
 flash-openocd-jlink:
-	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
+	$(OPENOCD_PATH)openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
 
 .PHONY: reset-openocd-jlink
 reset-openocd-jlink:
-	$(OPENOCD_PATH)/openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "init; reset; exit"
+	$(OPENOCD_PATH)openocd -f interface/jlink.cfg -f target/at32f415xx.cfg -c "init; reset; exit"
 
 .PHONY: flash-atlink-console
 flash-atlink-console:
