@@ -24,6 +24,8 @@ git clone --recursive https://github.com/smirnovalnik/at32f415-vscode-gcc-templa
 * `arm-none-eabi-gcc` toolchain >= 13.2 from [here](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 * `openocd` port for [atlink](https://github.com/ArteryTek/openocd)
 * `vscode` with `Cortex-Debug` extension
+* `clang-format` for code formatting
+* `build-essential` for building tests
 
 ### Build release firmware
 
@@ -60,11 +62,5 @@ make test
 Run in root directory for release firmware:
 
 ```bash
-make flash-atlink
-```
-
-or
-
-```bash
-make flash-jlink
+make flash-openocd-atlink
 ```
