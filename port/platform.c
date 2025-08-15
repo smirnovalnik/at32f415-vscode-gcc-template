@@ -304,6 +304,10 @@ static int flash_prog(const struct lfs_config* c, lfs_block_t block, lfs_off_t o
             = flash_word_program(platform_get_lfs_start() + block * BLOCK_SIZE + off + i, *((uint32_t*)(buffer + i)));
         if (status != FLASH_OPERATE_DONE)
         {
+            if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
+            {
+                flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
+            }
             flash_lock();
             return -1;
         }
@@ -323,6 +327,10 @@ static int flash_erase(const struct lfs_config* c, lfs_block_t block)
     status = flash_sector_erase(platform_get_lfs_start() + block * BLOCK_SIZE);
     if (status != FLASH_OPERATE_DONE)
     {
+        if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
+        {
+            flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
+        }
         flash_lock();
         return -1;
     }
