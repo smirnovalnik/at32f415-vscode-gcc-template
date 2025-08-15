@@ -104,7 +104,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -141,6 +141,15 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
+
+  /* Reserved section at the end of FLASH */
+  .lfs (NOLOAD) :
+  {
+    _lfs_start = .;
+    . = ORIGIN(FLASH) + LENGTH(FLASH) - 4K;
+    . = ALIGN(4);
+    _lfs_end = .;
+  } >FLASH
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
