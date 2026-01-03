@@ -195,7 +195,7 @@ flash-openocd-atlink:
 
 .PHONY: reset-openocd-atlink
 reset-openocd-atlink:
-	$(OPENOCD_PATH)openocd -f interface/atlink_dap_v2.cfg -f target/at32f435xx.cfg -c "init; reset; exit"
+	$(OPENOCD_PATH)openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "init; reset; exit"
 
 .PHONY: flash-openocd-jlink
 flash-openocd-jlink:
