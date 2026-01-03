@@ -57,6 +57,26 @@ make clean && make TEST=1 -j
 make test
 ```
 
+### Build in Docker
+
+Build Docker image (required once):
+
+```bash
+make docker-build
+```
+
+Run interactive shell in Docker:
+
+```bash
+make docker-run
+```
+
+Remove Docker image:
+
+```bash
+make docker-clean
+```
+
 ### Flash
 
 Run in root directory for release firmware:
