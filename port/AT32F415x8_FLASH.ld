@@ -28,11 +28,16 @@ _estack = 0x20008000;    /* end of RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
 
+/* LittleFS reserved area at the end of FLASH (4KB) */
+_lfs_size = 4K;
+_lfs_start = 0x08000000 + 64K - _lfs_size;
+
 /* Specify the memory areas */
 MEMORY
 {
-FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 64K
-RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 32K
+  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K - _lfs_size
+  DATA_FLASH (r)  : ORIGIN = _lfs_start, LENGTH = _lfs_size
+  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
 /* Define output sections */
@@ -141,15 +146,6 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
-
-  /* Reserved section at the end of FLASH */
-  .lfs (NOLOAD) :
-  {
-    _lfs_start = .;
-    . = ORIGIN(FLASH) + LENGTH(FLASH) - 4K;
-    . = ALIGN(4);
-    _lfs_end = .;
-  } >FLASH
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

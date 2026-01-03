@@ -266,16 +266,20 @@ bool platform_is_flash_protection_enabled(void)
     return (flash_fap_status_get() == RESET) ? false : true;
 }
 
-#define LFS_SIZE           4096 // 4KB, see linker script
+// Linker script symbols
+extern uint32_t _lfs_start;
+extern uint32_t _lfs_size;
+
+#define LFS_START_ADDR     ((uint32_t)&_lfs_start)
+#define LFS_SIZE           ((uint32_t)&_lfs_size)
 #define LFS_CACHE_SIZE     256
 #define LFS_LOOKAHEAD_SIZE 16
 
-#define BLOCK_SIZE  2048
-#define BLOCK_COUNT (LFS_SIZE / BLOCK_SIZE)
+#define BLOCK_SIZE 2048
 
 uint32_t platform_get_lfs_start(void)
 {
-    return (uint32_t)(FLASH_BASE + platform_get_flash_size_kb() * 1024 - LFS_SIZE);
+    return LFS_START_ADDR;
 }
 
 static lfs_t lfs;
@@ -348,7 +352,7 @@ static uint8_t prog_buf[LFS_CACHE_SIZE];
 static uint8_t read_buf[LFS_CACHE_SIZE];
 static uint8_t lookahead_buf[LFS_LOOKAHEAD_SIZE];
 
-static const struct lfs_config cfg = {
+static struct lfs_config cfg = {
     // block device operations
     .read = flash_read,
     .prog = flash_prog,
@@ -359,7 +363,7 @@ static const struct lfs_config cfg = {
     .read_size = 4,
     .prog_size = 4,
     .block_size = BLOCK_SIZE,
-    .block_count = BLOCK_COUNT,
+    .block_count = 0,  // initialized lazily
     .cache_size = LFS_CACHE_SIZE,
     .lookahead_size = LFS_LOOKAHEAD_SIZE,
     .block_cycles = 500,
@@ -371,7 +375,11 @@ static const struct lfs_config cfg = {
 
 struct lfs_config* platform_get_lfs_config(void)
 {
-    return (struct lfs_config*)&cfg;
+    if (cfg.block_count == 0)
+    {
+        cfg.block_count = LFS_SIZE / BLOCK_SIZE;
+    }
+    return &cfg;
 }
 
 #define STDIO_PP_BUF_SIZE 256
