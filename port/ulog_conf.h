@@ -25,6 +25,10 @@
 #define ULOG_REMOVE_SPACES      0     // Remove \n, \r, \t from the message
 #define ULOG_MESSAGE_LEN        120   // Maximum length of the formatted message
 
+// Binary dump settings
+#define ULOG_DUMP_BYTES_PER_LINE 16   // Number of bytes per line in hex dump (8 or 16 recommended)
+#define ULOG_DUMP_SHOW_ASCII     1    // Show ASCII representation of binary data
+
 #define ULOG_FILE_SYSTEM        0     // Enable log to file system (disable for most MCUs)
 #define ULOG_FILE_NAME          "system.log"        // File name
 #define ULOG_MAX_FILE_SIZE      (1 * 1024 * 1024)   // Max file size in bytes before rotation
