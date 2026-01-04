@@ -23,6 +23,9 @@ int main(void)
 {
     platform_init();
 
+    ulog_init(ULOG_STDOUT);
+    ulog_set_level(ULOG_DEBUG_LVL);
+
     xTaskCreate(system_task, "system_task", 512, NULL, 2, NULL);
 
     vTaskStartScheduler();
@@ -35,34 +38,56 @@ void vApplicationIdleHook(void)
 
 void system_task(void* pvParameters)
 {
-    ulog_init(ULOG_STDOUT);
-    ulog_set_level(ULOG_DEBUG_LVL);
+    (void)pvParameters;
 
-    ULOG_INFO(TAG, "");
+#if WDG_ENABLE == 1
+    platform_wdg_init();
+#endif
+
+    // Print system info
     ULOG_INFO(TAG, "----------------------------------------------");
-    ULOG_INFO(TAG, "Copyright FDC (C) 2025");
+    ULOG_INFO(TAG, "Developed by FDC (C) %.4s", __DATE__ + 7);
     ULOG_INFO(TAG, "target: %s", TARGET);
     ULOG_INFO(TAG, "fw version: %s", VERSION);
-    ULOG_INFO(TAG, "hw revision: %s", HW_REVISION);
     ULOG_INFO(TAG, "git commit hash: %s", GIT_HASH);
     ULOG_INFO(TAG, "build date: %s", __DATE__);
     ULOG_INFO(TAG, "build time: %s", __TIME__);
+    ULOG_INFO(TAG, "hw revision: %s", HW_REVISION);
+    ULOG_INFO(TAG, "FreeRTOS version: %s", tskKERNEL_VERSION_NUMBER);
 
     uint32_t mcu_uid[3];
     platform_get_mcu_uid(mcu_uid);
-    ULOG_INFO(TAG, "mcu uid: %08X %08X %08X", mcu_uid[0], mcu_uid[1], mcu_uid[2]);
+    uint32_t uid = platform_get_uid();
+    ULOG_INFO(TAG, "uid: %08x", uid);
+    ULOG_INFO(TAG, "mcu uid: %08x %08x %08x", mcu_uid[0], mcu_uid[1], mcu_uid[2]);
     ULOG_INFO(TAG, "flash size: %d KB", platform_get_flash_size_kb());
-    ULOG_INFO(TAG, "system_core_clock: %d MHz", platform_get_system_clock_mhz());
+    ULOG_INFO(TAG, "sysclk: %d MHz", platform_get_sysclk_mhz());
+
     platform_rst_cause_t rst_cause = {0};
     platform_get_rst_cause(&rst_cause);
-    ULOG_INFO(TAG, "rst cause: power_on: %d, external: %d, software: %d, watchdog: %d, brown_out: %d",
+    ULOG_INFO(TAG,
+              "rst cause: power_on: %d, external: %d, software: %d, watchdog: "
+              "%d, brown_out: %d",
               rst_cause.power_on, rst_cause.external, rst_cause.software, rst_cause.watchdog, rst_cause.brown_out);
-
+    ULOG_INFO(TAG, "lfs start: 0x%08x", platform_get_lfs_start());
     ULOG_WARN(TAG, "start");
 
-    platform_wdg_init();
+    bool fap = platform_is_flash_protection_enabled();
+    if (fap == false)
+    {
+        ULOG_WARN(TAG, "flash protection is disabled");
+#if FAP_ENABLE == 1
+        ULOG_WARN(TAG, "enable flash protection and reset");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        platform_flash_protection_enable();
+        platform_reset();
+        for (;;);
+#endif
+    }
 
     uint32_t counter = 0;
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+
     for (;;)
     {
         platform_wdg_feed();
@@ -70,6 +95,6 @@ void system_task(void* pvParameters)
         ULOG_INFO(TAG, "counter: %d", counter);
         counter++;
 
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000));
     }
 }

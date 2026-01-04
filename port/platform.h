@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    platform.h
   * @author  Alexander Smirnov
-  * @copyright Copyright FDC (C) 2024
+  * @copyright Copyright FDC (C) 2024-2026
   ******************************************************************************
 */
 
@@ -34,7 +34,7 @@ typedef struct platform_rst_cause_t
 
 void platform_get_rst_cause(platform_rst_cause_t* rst_cause);
 
-uint32_t platform_get_system_clock_mhz(void);
+uint32_t platform_get_sysclk_mhz(void);
 
 void clock_failure_detection_handler(void);
 

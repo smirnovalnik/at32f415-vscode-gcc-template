@@ -2,8 +2,9 @@ TARGET ?= target_name
 
 -include .env
 
-# Test
 TEST ?= 0
+FAP_ENABLE ?= 0
+WDG_ENABLE ?= 0
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 0
