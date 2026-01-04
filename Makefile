@@ -189,6 +189,14 @@ clean:
 	-rm -fR $(DIST_DIR)
 	-rm -fR $(TMP_DIR)
 
+.PHONY: rebuild
+rebuild: clean
+	$(MAKE) -j
+
+.PHONY: reflash
+reflash: rebuild
+	$(MAKE) flash-openocd-atlink
+
 .PHONY: flash-openocd-atlink
 flash-openocd-atlink:
 	$(OPENOCD_PATH)openocd -f interface/atlink_dap_v2.cfg -f target/at32f415xx.cfg -c "program $(OUT_DIR)/$(TARGET).elf verify reset exit"
