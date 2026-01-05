@@ -13,11 +13,11 @@
 
 #include "cycle_timer.h"
 #include "hal.h"
+#include "led.h"
 #include "ost.h"
 #include "platform.h"
 #include "systick.h"
 #include "ulog.h"
-#include "led.h"
 
 const char* TAG = "main";
 
@@ -97,8 +97,8 @@ void system_task(void* pvParameters)
     ost_t ost_heartbeat;
     ost_arm(&ost_heartbeat, 100); // arm for 100 ms
 
-    ost_t ost_demo_timer;
-    ost_arm(&ost_demo_timer, 3000); // arm for 3000 ms
+    ost_t ost_counter_timer;
+    ost_arm(&ost_counter_timer, 3000); // arm for 3000 ms
     ULOG_INFO(TAG, "ost timer armed for 3000 ms");
 
     int64_t start_ms = systick_get_tick_ms();
@@ -115,9 +115,9 @@ void system_task(void* pvParameters)
     {
         platform_wdg_feed();
 
-        if (ost_expired(&ost_demo_timer))
+        if (ost_expired(&ost_counter_timer))
         {
-            ost_arm(&ost_demo_timer, 1000); // re-arm for 1 second
+            ost_arm(&ost_counter_timer, 1000); // re-arm for 1 second
 
             ULOG_INFO(TAG, "counter: %d", counter);
             counter++;
@@ -131,7 +131,7 @@ void system_task(void* pvParameters)
             cnt++;
             if ((cnt & 7) == 0 || (cnt & 7) == 2)
             {
-                led_set(LED_ON);
+                led_set(LED_ON_SMOOTH_FAST);
             }
             else
             {
