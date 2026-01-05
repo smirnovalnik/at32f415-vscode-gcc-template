@@ -17,14 +17,17 @@
 #include "task.h"
 
 #define STDOUT_QUEUE_SIZE 1024
-static QueueHandle_t stdout_queue;
 
-static void uart_print_init(uint32_t baudrate);
-static void stdio_task(void* pvParameters);
+static QueueHandle_t stdout_queue;
+static SemaphoreHandle_t uart_tx_cmplt_smphr = NULL;
+
+static void stdout_init(uint32_t baudrate);
+static void stdout_task(void* pvParameters);
+static void stdout_tr(uint8_t* buf, uint32_t size);
 
 void platform_init(void)
 {
-    system_clock_config();
+    system_clock_config_144mhz();
 
     nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
@@ -33,18 +36,18 @@ void platform_init(void)
 
     systick_init();
 
-    uart_print_init(LOG_UART_BAUDRATE);
+    stdout_init(LOG_UART_BAUDRATE);
     stdout_queue = xQueueCreate(STDOUT_QUEUE_SIZE, sizeof(char));
-    xTaskCreate(stdio_task, "stdio_task", 128, NULL, 1, NULL);
+    xTaskCreate(stdout_task, "stdout_task", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 }
 
-static void uart_print_init(uint32_t baudrate)
+static void stdout_init(uint32_t baudrate)
 {
 #if defined(__GNUC__) && !defined(__clang__)
     setvbuf(stdout, NULL, _IONBF, 0);
 #endif
 
-    crm_periph_clock_enable(LOG_UART_CLK, TRUE);
+    // gpio
     crm_periph_clock_enable(LOG_UART_TX_PORT_CLK, TRUE);
 
     gpio_init_type gpio_init_struct;
@@ -57,9 +60,71 @@ static void uart_print_init(uint32_t baudrate)
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
     gpio_init(LOG_UART_TX_PORT, &gpio_init_struct);
 
+    // uart
+    crm_periph_clock_enable(LOG_UART_CLK, TRUE);
+
     usart_init(LOG_UART, baudrate, USART_DATA_8BITS, USART_STOP_1_BIT);
     usart_transmitter_enable(LOG_UART, TRUE);
+    usart_dma_transmitter_enable(LOG_UART, TRUE);
     usart_enable(LOG_UART, TRUE);
+
+    // dma
+    crm_periph_clock_enable(LOG_UART_DMA_CLK, TRUE);
+
+    dma_reset(LOG_UART_DMA_CH);
+    dma_flexible_config(LOG_UART_DMA, FLEX_CHANNEL7, DMA_FLEXIBLE_UART1_TX);
+    dma_interrupt_enable(LOG_UART_DMA_CH, DMA_FDT_INT, TRUE);
+    nvic_irq_enable(LOG_UART_DMA_CH_IRQN, LOG_UART_DMA_IRQ_PRIORITY, 0);
+
+    // rtos
+    if (uart_tx_cmplt_smphr == NULL)
+    {
+        uart_tx_cmplt_smphr = xSemaphoreCreateBinary();
+    }
+}
+
+static void stdout_deinit(void)
+{
+    usart_enable(LOG_UART, FALSE);
+    usart_dma_transmitter_enable(LOG_UART, FALSE);
+    usart_transmitter_enable(LOG_UART, FALSE);
+
+    dma_channel_enable(LOG_UART_DMA_CH, FALSE);
+    dma_interrupt_enable(LOG_UART_DMA_CH, DMA_FDT_INT, FALSE);
+    nvic_irq_disable(LOG_UART_DMA_CH_IRQN);
+}
+
+static void stdout_tr(uint8_t* buf, uint32_t size)
+{
+    dma_init_type dma_init_struct;
+    dma_default_para_init(&dma_init_struct);
+    dma_init_struct.buffer_size = size;
+    dma_init_struct.direction = DMA_DIR_MEMORY_TO_PERIPHERAL;
+    dma_init_struct.memory_base_addr = (uint32_t)buf;
+    dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_BYTE;
+    dma_init_struct.memory_inc_enable = TRUE;
+    dma_init_struct.peripheral_base_addr = (uint32_t)&LOG_UART->dt;
+    dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_BYTE;
+    dma_init_struct.peripheral_inc_enable = FALSE;
+    dma_init_struct.priority = DMA_PRIORITY_LOW;
+    dma_init_struct.loop_mode_enable = FALSE;
+    dma_init(LOG_UART_DMA_CH, &dma_init_struct);
+
+    dma_channel_enable(LOG_UART_DMA_CH, TRUE);
+
+    xSemaphoreTake(uart_tx_cmplt_smphr, pdMS_TO_TICKS(100));
+}
+
+void LOG_UART_DMA_CH_IRQ_HANDLER(void)
+{
+    if (dma_interrupt_flag_get(LOG_UART_DMA_CH_FLAG))
+    {
+        dma_flag_clear(LOG_UART_DMA_CH_FLAG);
+        dma_channel_enable(LOG_UART_DMA_CH, FALSE);
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        xSemaphoreGiveFromISR(uart_tx_cmplt_smphr, &xHigherPriorityTaskWoken);
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
 }
 
 void platform_wdg_init(void)
@@ -94,6 +159,11 @@ void platform_reset(void)
 void platform_sleep(void)
 {
     pwc_sleep_mode_enter(PWC_SLEEP_ENTER_WFI);
+}
+
+void platform_bootloader_jump(void)
+{
+    // TODO
 }
 
 void platform_get_rst_cause(platform_rst_cause_t* rst_cause)
@@ -149,13 +219,44 @@ void platform_get_rst_cause(platform_rst_cause_t* rst_cause)
     }
 }
 
+void platform_set_sysclk(platform_sysclk_t sysclk)
+{
+    switch (sysclk)
+    {
+        case SYSCLK_144MHZ:
+        {
+            systick_deinit();
+            stdout_deinit();
+
+            system_clock_config_144mhz();
+
+            systick_init();
+            stdout_init(LOG_UART_BAUDRATE);
+            break;
+        }
+        case SYSCLK_16MHZ:
+        {
+            systick_deinit();
+            stdout_deinit();
+
+            system_clock_config_16mhz();
+
+            systick_init();
+            stdout_init(LOG_UART_BAUDRATE);
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 uint32_t platform_get_sysclk_mhz(void)
 {
     return system_core_clock / 1000000;
 }
 
 // Only for HEXT clock
-void clock_failure_detection_handler(void)
+void platform_clock_failure_detection_handler(void)
 {
     if (crm_flag_get(CRM_CLOCK_FAILURE_INT_FLAG) != RESET)
     {
@@ -171,7 +272,7 @@ void clock_failure_detection_handler(void)
 
 static fn_t pvm_cb = NULL;
 
-void power_voltage_monitor_enable(fn_t cb)
+void platform_power_voltage_monitor_enable(fn_t cb)
 {
     crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
 
@@ -203,7 +304,7 @@ void power_voltage_monitor_enable(fn_t cb)
     nvic_irq_enable(PVM_IRQn, 1, 0);
 }
 
-void power_voltage_monitor_handler(void)
+void platform_power_voltage_monitor_handler(void)
 {
     if (exint_flag_get(EXINT_LINE_16) != RESET)
     {
@@ -382,13 +483,13 @@ struct lfs_config* platform_get_lfs_config(void)
     return &cfg;
 }
 
-#define STDIO_PP_BUF_SIZE 256
+#define STDOUT_PP_BUF_SIZE 256
 
-static void stdio_task(void* pvParameters)
+static void stdout_task(void* pvParameters)
 {
     for (;;)
     {
-        static uint8_t buf1[STDIO_PP_BUF_SIZE], buf2[STDIO_PP_BUF_SIZE];
+        static uint8_t buf1[STDOUT_PP_BUF_SIZE], buf2[STDOUT_PP_BUF_SIZE];
         static uint32_t len1 = 0, len2 = 0;
 
         uint8_t* ping_buf;
@@ -409,15 +510,11 @@ static void stdio_task(void* pvParameters)
 
         if (xQueueReceive(stdout_queue, &ping_buf[*ping_len], portMAX_DELAY) == pdPASS)
         {
-            while ((++(*ping_len) < STDIO_PP_BUF_SIZE)
+            while ((++(*ping_len) < STDOUT_PP_BUF_SIZE)
                    && (xQueueReceive(stdout_queue, &ping_buf[*ping_len], 0) == pdPASS));
 
             *pong_len = 0;
-            for (int i = 0; i < *ping_len; i++)
-            {
-                while (usart_flag_get(LOG_UART, USART_TDBE_FLAG) == RESET);
-                usart_data_transmit(LOG_UART, (uint16_t)(*ping_buf++));
-            }
+            stdout_tr(ping_buf, *ping_len);
         }
     }
 }
@@ -429,4 +526,9 @@ int platform_fputc(int ch)
     xQueueSendToBack(stdout_queue, &item, pdMS_TO_TICKS(10));
 
     return ch;
+}
+
+int platform_fgetc(void)
+{
+    return 0;
 }

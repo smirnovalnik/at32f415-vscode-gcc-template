@@ -1,0 +1,62 @@
+/**
+ ******************************************************************************
+ * @file    cycle_timer.c
+ * @author  Alexander Smirnov
+ * @copyright Copyright FDC (C) 2025
+ ******************************************************************************
+ */
+
+#include "cycle_timer.h"
+#include "hal.h"
+
+static uint32_t s_cpu_hz = 0;
+
+int cycle_timer_init(uint32_t cpu_hz)
+{
+    s_cpu_hz = cpu_hz;
+
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+
+    if ((DWT->CTRL & DWT_CTRL_NOCYCCNT_Msk) != 0u)
+    {
+        return -1;
+    }
+
+    DWT->CYCCNT = 0u;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+    __DSB();
+    __ISB();
+
+    return 0;
+}
+
+uint32_t cycle_timer_cpu_hz(void)
+{
+    return s_cpu_hz;
+}
+
+uint64_t cycle_timer_cycles_to_ns(uint32_t cycles)
+{
+    if (s_cpu_hz == 0u)
+        return 0u;
+    /* ns = cycles * 1e9 / Hz */
+    return (uint64_t)cycles * 1000000000ull / (uint64_t)s_cpu_hz;
+}
+
+uint32_t cycle_timer_cycles_to_us(uint32_t cycles)
+{
+    if (s_cpu_hz == 0u)
+        return 0u;
+    /* us = cycles * 1e6 / Hz */
+    return (uint32_t)((uint64_t)cycles * 1000000ull / (uint64_t)s_cpu_hz);
+}
+
+void cycle_timer_delay_cycles(uint32_t cycles)
+{
+    uint32_t start = cycle_timer_now();
+    while (cycle_timer_elapsed(start, cycle_timer_now()) < cycles)
+    {
+        __NOP();
+    }
+}

@@ -44,7 +44,7 @@
  */
 void NMI_Handler(void)
 {
-    clock_failure_detection_handler();
+    platform_clock_failure_detection_handler();
 }
 
 /**
@@ -148,7 +148,7 @@ void SysTick_Handler(void)
  */
 void PVM_IRQHandler(void)
 {
-    power_voltage_monitor_handler();
+    platform_power_voltage_monitor_handler();
 }
 
 /**

@@ -34,7 +34,8 @@ extern "C" {
 #include "at32f415.h"
 
 /* exported functions ------------------------------------------------------- */
-void system_clock_config(void);
+void system_clock_config_144mhz(void);
+void system_clock_config_16mhz(void);
 
 #ifdef __cplusplus
 }

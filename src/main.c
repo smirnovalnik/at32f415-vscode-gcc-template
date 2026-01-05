@@ -11,6 +11,7 @@
 #include "semphr.h"
 #include "task.h"
 
+#include "hal.h"
 #include "platform.h"
 #include "systick.h"
 #include "ulog.h"
@@ -26,7 +27,7 @@ int main(void)
     ulog_init(ULOG_STDOUT);
     ulog_set_level(ULOG_DEBUG_LVL);
 
-    xTaskCreate(system_task, "system_task", 512, NULL, 2, NULL);
+    xTaskCreate(system_task, "system_task", SYSTEM_TASK_STACK_SIZE, NULL, SYSTEM_TASK_PRIORITY, NULL);
 
     vTaskStartScheduler();
 }

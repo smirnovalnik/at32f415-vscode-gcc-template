@@ -23,6 +23,8 @@ void platform_reset(void);
 
 void platform_sleep(void);
 
+void platform_bootloader_jump(void);
+
 typedef struct platform_rst_cause_t
 {
     bool power_on;
@@ -34,15 +36,23 @@ typedef struct platform_rst_cause_t
 
 void platform_get_rst_cause(platform_rst_cause_t* rst_cause);
 
+typedef enum platform_sysclk_t
+{
+    SYSCLK_144MHZ,
+    SYSCLK_16MHZ,
+} platform_sysclk_t;
+
+void platform_set_sysclk(platform_sysclk_t sysclk);
+
 uint32_t platform_get_sysclk_mhz(void);
 
-void clock_failure_detection_handler(void);
+void platform_clock_failure_detection_handler(void);
 
 typedef void (*fn_t)(void);
 
-void power_voltage_monitor_enable(fn_t cb);
+void platform_power_voltage_monitor_enable(fn_t cb);
 
-void power_voltage_monitor_handler(void);
+void platform_power_voltage_monitor_handler(void);
 
 void platform_get_mcu_uid(uint32_t uid[3]);
 
@@ -61,3 +71,5 @@ lfs_t* platform_get_lfs(void);
 struct lfs_config* platform_get_lfs_config(void);
 
 int platform_fputc(int ch);
+
+int platform_fgetc(void);

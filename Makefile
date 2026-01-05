@@ -36,6 +36,7 @@ OPT = -O3
 PROJ_C_SOURCES = \
 $(wildcard src/*.c) \
 $(wildcard port/*.c) \
+$(wildcard port/common/*.c) \
 
 LIB_C_SOURCES = \
 libs/at32f415/libraries/cmsis/cm4/device_support/system_at32f415.c \
@@ -111,6 +112,7 @@ AS_INCLUDES =
 C_INCLUDES =  \
 -Isrc \
 -Iport \
+-Iport/common \
 -Ilibs/at32f415/libraries/cmsis/cm4/device_support \
 -Ilibs/at32f415/libraries/cmsis/cm4/core_support \
 -Ilibs/at32f415/libraries/drivers/inc \
