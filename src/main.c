@@ -11,7 +11,9 @@
 #include "semphr.h"
 #include "task.h"
 
+#include "cycle_timer.h"
 #include "hal.h"
+#include "ost.h"
 #include "platform.h"
 #include "systick.h"
 #include "ulog.h"
@@ -89,9 +91,29 @@ void system_task(void* pvParameters)
     uint32_t counter = 0;
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
+    ost_t demo_timer;
+    ost_arm(&demo_timer, 3000); // arm for 3000 ms
+    ULOG_INFO(TAG, "ost timer armed for 3000 ms");
+
+    int64_t start_ms = systick_get_tick_ms();
+    ULOG_INFO(TAG, "current tick: %ld ms", start_ms);
+
+    uint32_t t0 = cycle_timer_now();
+    for (volatile int i = 0; i < 1000; i++); // dummy loop
+    uint32_t t1 = cycle_timer_now();
+    uint32_t elapsed_cycles = cycle_timer_elapsed(t0, t1);
+    uint32_t elapsed_us = cycle_timer_cycles_to_us(elapsed_cycles);
+    ULOG_INFO(TAG, "dummy loop: %lu cycles, %lu us", elapsed_cycles, elapsed_us);
+
     for (;;)
     {
         platform_wdg_feed();
+
+        if (ost_expired(&demo_timer))
+        {
+            ULOG_INFO(TAG, "ost timer expired");
+            ost_arm(&demo_timer, 5000); // re-arm for 5 seconds
+        }
 
         ULOG_INFO(TAG, "counter: %d", counter);
         counter++;

@@ -11,9 +11,9 @@
 
 static uint32_t s_cpu_hz = 0;
 
-int cycle_timer_init(uint32_t cpu_hz)
+int cycle_timer_init(void)
 {
-    s_cpu_hz = cpu_hz;
+    s_cpu_hz = system_core_clock;
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 

@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-int cycle_timer_init(uint32_t cpu_hz);
+int cycle_timer_init(void);
 
 static inline uint32_t cycle_timer_now(void)
 {

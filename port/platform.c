@@ -10,6 +10,7 @@
 #include "at32f415_clock.h"
 #include "hal.h"
 #include "systick.h"
+#include "cycle_timer.h"
 
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
@@ -35,6 +36,7 @@ void platform_init(void)
     // crm_clock_failure_detection_enable(TRUE);
 
     systick_init();
+    cycle_timer_init();
 
     stdout_init(LOG_UART_BAUDRATE);
     stdout_queue = xQueueCreate(STDOUT_QUEUE_SIZE, sizeof(char));
@@ -231,6 +233,7 @@ void platform_set_sysclk(platform_sysclk_t sysclk)
             system_clock_config_144mhz();
 
             systick_init();
+            cycle_timer_init();
             stdout_init(LOG_UART_BAUDRATE);
             break;
         }
@@ -242,6 +245,7 @@ void platform_set_sysclk(platform_sysclk_t sysclk)
             system_clock_config_16mhz();
 
             systick_init();
+            cycle_timer_init();
             stdout_init(LOG_UART_BAUDRATE);
             break;
         }
