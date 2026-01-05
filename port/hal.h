@@ -43,13 +43,12 @@
 
 #define LOG_UART_BAUDRATE               250000
 
-
 // LED
-#define LED_PORT                    GPIOB
-#define LED_PIN                     GPIO_PINS_5
-#define LED_PORT_CLK                CRM_GPIOB_PERIPH_CLOCK
+#define LED_PORT                        GPIOF
+#define LED_PIN                         GPIO_PINS_7
+#define LED_PORT_CLK                    CRM_GPIOF_PERIPH_CLOCK
 
-#define LED_TMR                     TMR4
-#define LED_TMR_CLK                 CRM_TMR4_PERIPH_CLOCK
-#define LED_TMR_IRQN                TMR4_GLOBAL_IRQn
-#define LED_IRQ_HANDLER             TMR4_GLOBAL_IRQHandler
+#define LED_TMR                         TMR4
+#define LED_TMR_CLK                     CRM_TMR4_PERIPH_CLOCK
+#define LED_TMR_IRQN                    TMR4_GLOBAL_IRQn
+#define LED_IRQ_HANDLER                 TMR4_GLOBAL_IRQHandler

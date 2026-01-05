@@ -8,9 +8,9 @@
 
 #include "platform.h"
 #include "at32f415_clock.h"
+#include "cycle_timer.h"
 #include "hal.h"
 #include "systick.h"
-#include "cycle_timer.h"
 
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
