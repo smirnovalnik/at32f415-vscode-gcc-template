@@ -92,7 +92,6 @@ void system_task(void* pvParameters)
     }
 
     uint32_t counter = 0;
-    TickType_t xLastWakeTime = xTaskGetTickCount();
 
     ost_t ost_heartbeat;
     ost_arm(&ost_heartbeat, 100); // arm for 100 ms
@@ -110,6 +109,8 @@ void system_task(void* pvParameters)
     uint32_t elapsed_cycles = cycle_timer_elapsed(t0, t1);
     uint32_t elapsed_us = cycle_timer_cycles_to_us(elapsed_cycles);
     ULOG_INFO(TAG, "dummy loop: %lu cycles, %lu us", elapsed_cycles, elapsed_us);
+
+    TickType_t xLastWakeTime = xTaskGetTickCount();
 
     for (;;)
     {
