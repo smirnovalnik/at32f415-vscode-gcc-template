@@ -31,16 +31,11 @@ int cycle_timer_init(void)
     return 0;
 }
 
-uint32_t cycle_timer_cpu_hz(void)
-{
-    return s_cpu_hz;
-}
-
 uint64_t cycle_timer_cycles_to_ns(uint32_t cycles)
 {
     if (s_cpu_hz == 0u)
         return 0u;
-    /* ns = cycles * 1e9 / Hz */
+    // ns = cycles * 1e9 / Hz
     return (uint64_t)cycles * 1000000000ull / (uint64_t)s_cpu_hz;
 }
 
@@ -48,7 +43,7 @@ uint32_t cycle_timer_cycles_to_us(uint32_t cycles)
 {
     if (s_cpu_hz == 0u)
         return 0u;
-    /* us = cycles * 1e6 / Hz */
+    // us = cycles * 1e6 / Hz
     return (uint32_t)((uint64_t)cycles * 1000000ull / (uint64_t)s_cpu_hz);
 }
 

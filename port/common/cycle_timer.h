@@ -23,8 +23,6 @@ static inline uint32_t cycle_timer_elapsed(uint32_t start, uint32_t end)
     return (uint32_t)(end - start);
 }
 
-uint32_t cycle_timer_cpu_hz(void);
-
 uint64_t cycle_timer_cycles_to_ns(uint32_t cycles);
 
 uint32_t cycle_timer_cycles_to_us(uint32_t cycles);
