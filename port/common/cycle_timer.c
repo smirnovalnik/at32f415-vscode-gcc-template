@@ -9,11 +9,11 @@
 #include "cycle_timer.h"
 #include "hal.h"
 
-static uint32_t s_cpu_hz = 0;
+static uint32_t _cpu_hz = 0;
 
 int cycle_timer_init(void)
 {
-    s_cpu_hz = system_core_clock;
+    _cpu_hz = system_core_clock;
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 
@@ -33,18 +33,18 @@ int cycle_timer_init(void)
 
 uint64_t cycle_timer_cycles_to_ns(uint32_t cycles)
 {
-    if (s_cpu_hz == 0u)
+    if (_cpu_hz == 0u)
         return 0u;
     // ns = cycles * 1e9 / Hz
-    return (uint64_t)cycles * 1000000000ull / (uint64_t)s_cpu_hz;
+    return (uint64_t)cycles * 1000000000ull / (uint64_t)_cpu_hz;
 }
 
 uint32_t cycle_timer_cycles_to_us(uint32_t cycles)
 {
-    if (s_cpu_hz == 0u)
+    if (_cpu_hz == 0u)
         return 0u;
     // us = cycles * 1e6 / Hz
-    return (uint32_t)((uint64_t)cycles * 1000000ull / (uint64_t)s_cpu_hz);
+    return (uint32_t)((uint64_t)cycles * 1000000ull / (uint64_t)_cpu_hz);
 }
 
 void cycle_timer_delay_cycles(uint32_t cycles)
