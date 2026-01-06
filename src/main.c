@@ -71,11 +71,11 @@ void system_task(void* pvParameters)
 
     platform_rst_cause_t rst_cause = {0};
     platform_get_rst_cause(&rst_cause);
-    ULOG_INFO(TAG,
-              "rst cause: power_on: %d, external: %d, software: %d, watchdog: "
-              "%d, brown_out: %d",
-              rst_cause.power_on, rst_cause.external, rst_cause.software, rst_cause.watchdog, rst_cause.brown_out);
-    ULOG_INFO(TAG, "lfs start: 0x%08x", platform_get_lfs_start());
+    ULOG_DEBUG(TAG,
+               "rst cause: power_on: %d, external: %d, software: %d, watchdog: "
+               "%d, brown_out: %d",
+               rst_cause.power_on, rst_cause.external, rst_cause.software, rst_cause.watchdog, rst_cause.brown_out);
+    ULOG_DEBUG(TAG, "lfs start: 0x%08x", platform_get_lfs_start());
     ULOG_WARN(TAG, "start");
 
     bool fap = platform_is_flash_protection_enabled();
@@ -97,7 +97,7 @@ void system_task(void* pvParameters)
     ost_arm(&ost_heartbeat, 100); // arm for 100 ms
 
     ost_t ost_counter_timer;
-    ost_arm(&ost_counter_timer, 3000); // arm for 3000 ms
+    ost_arm(&ost_counter_timer, 1000); // arm for 1000 ms
     ULOG_INFO(TAG, "ost timer armed for 3000 ms");
 
     int64_t start_ms = systick_get_tick_ms();
@@ -118,7 +118,7 @@ void system_task(void* pvParameters)
 
         if (ost_expired(&ost_counter_timer))
         {
-            ost_arm(&ost_counter_timer, 1000); // re-arm for 1 second
+            ost_arm(&ost_counter_timer, 1000); // re-arm for 1000 ms
 
             ULOG_INFO(TAG, "counter: %d", counter);
             counter++;
