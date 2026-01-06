@@ -28,3 +28,5 @@ uint64_t cycle_timer_cycles_to_ns(uint32_t cycles);
 uint32_t cycle_timer_cycles_to_us(uint32_t cycles);
 
 void cycle_timer_delay_cycles(uint32_t cycles);
+
+int cycle_timer_deinit(void);

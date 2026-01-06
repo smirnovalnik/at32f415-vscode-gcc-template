@@ -55,3 +55,16 @@ void cycle_timer_delay_cycles(uint32_t cycles)
         __NOP();
     }
 }
+
+int cycle_timer_deinit(void)
+{
+    DWT->CTRL &= ~DWT_CTRL_CYCCNTENA_Msk;
+    DWT->CYCCNT = 0u;
+
+    __DSB();
+    __ISB();
+
+    _cpu_hz = 0;
+
+    return 0;
+}
