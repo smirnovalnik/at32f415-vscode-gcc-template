@@ -2,7 +2,7 @@
  ******************************************************************************
  * @file    led.c
  * @author  Alexander Smirnov
- * @copyright Copyright FDC (C) 2025
+ * @copyright Copyright FDC (C) 2025-2026
  ******************************************************************************
  */
 
@@ -14,9 +14,9 @@
 static volatile led_state_t _state = LED_OFF;
 static volatile int32_t _oc_val = 0;
 
-#define CNT_MAX      (1000 - 1)
-#define FAST_INC_VAL 20 // 200 ms
-#define SLOW_INC_VAL 4  // 500 ms
+#define CNT_MAX      (5000 - 1)
+#define FAST_INC_VAL 250 // 200 ms
+#define SLOW_INC_VAL 100 // 500 ms
 
 int led_init(void)
 {
@@ -39,8 +39,8 @@ int led_init(void)
     // timer
     // tmr_clk = 500000 Hz
     // div = (apb1_freq * 2 / tmr_clk) - 1
-    // pr = 2000 - 1
-    // ovfclk = 500 Hz
+    // pr = 5000 - 1
+    // ovfclk = 100 Hz
     crm_clocks_freq_type crm_clocks_freq_struct = {0};
     crm_clocks_freq_get(&crm_clocks_freq_struct);
     uint16_t div_value = (uint16_t)(2 * crm_clocks_freq_struct.apb1_freq / 500000) - 1;
