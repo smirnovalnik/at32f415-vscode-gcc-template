@@ -2,6 +2,7 @@ TARGET ?= target_name
 
 -include .env
 
+DEBUG ?= 0
 TEST ?= 0
 FAP_ENABLE ?= 0
 WDG_ENABLE ?= 0
@@ -29,7 +30,6 @@ DIST_DIR = dist
 TMP_DIR = tmp
 
 # Debug and optimization
-DEBUG ?= 0
 OPT = -O3
 
 # Sources
