@@ -36,7 +36,7 @@ _lfs_start = 0x08000000 + 64K - _lfs_size;
 MEMORY
 {
   FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K - _lfs_size
-  DATA_FLASH (r)  : ORIGIN = _lfs_start, LENGTH = _lfs_size
+  LFS_FLASH (r)  : ORIGIN = _lfs_start, LENGTH = _lfs_size
   RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
