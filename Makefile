@@ -136,7 +136,7 @@ LDSCRIPT = port/AT32F415x8_FLASH.ld
 
 LIBDIR =
 LIBS = -lc -lm -lnosys
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(IMAGE_NAME).map,--cref -Wl,--gc-sections -Wl,--no-warn-rwx-segments
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(IMAGE_NAME).map,--cref,--print-memory-usage -Wl,--gc-sections -Wl,--no-warn-rwx-segments
 
 all: $(BUILD_DIR)/$(IMAGE_NAME).elf $(BUILD_DIR)/$(IMAGE_NAME).hex $(BUILD_DIR)/$(IMAGE_NAME).bin
 
