@@ -226,6 +226,7 @@ reset-atlink-console:
 
 .PHONY: test
 test: clean
+	mkdir -p $(BUILD_DIR)
 	gcc -Ilibs/unity/src -Isrc -o $(BUILD_DIR)/$(IMAGE_NAME)_test tests/unit_test_example.c libs/unity/src/unity.c
 	$(BUILD_DIR)/$(IMAGE_NAME)_test
 
