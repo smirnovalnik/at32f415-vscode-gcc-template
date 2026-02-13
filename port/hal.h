@@ -19,6 +19,7 @@
 // Interrupt priority
 #define LED_TMR_IRQ_PRIORITY            15
 #define LOG_UART_DMA_IRQ_PRIORITY       15
+#define LOG_UART_IRQ_PRIORITY           15
 
 // ISP/LOG
 #define LOG_UART                        USART1
@@ -40,6 +41,9 @@
 #define LOG_UART_DMA_ERR_FLAG           DMA1_DTERR7_FLAG
 #define LOG_UART_DMA_CH_IRQ_HANDLER     DMA1_Channel7_IRQHandler
 #define LOG_UART_DMA_CH_IRQN            DMA1_Channel7_IRQn
+
+#define LOG_UART_IRQ_HANDLER            USART1_IRQHandler
+#define LOG_UART_IRQN                   USART1_IRQn
 
 #define LOG_UART_BAUDRATE               250000
 
