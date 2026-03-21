@@ -59,7 +59,6 @@ void system_task(void* pvParameters)
     ULOG_INFO(TAG, "build date: %s", __DATE__);
     ULOG_INFO(TAG, "build time: %s", __TIME__);
     ULOG_INFO(TAG, "hw revision: %s", HW_REVISION);
-    ULOG_INFO(TAG, "FreeRTOS version: %s", tskKERNEL_VERSION_NUMBER);
 
     uint32_t mcu_uid[3];
     platform_get_mcu_uid(mcu_uid);
